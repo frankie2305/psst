@@ -1,0 +1,28 @@
+{
+  "name": "psst",
+  "version": "1.0.0",
+  "description": "A micro-blog similar to Twitter",
+  "main": "index.js",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MQCOMP3120-2020/individual-web-development-task-frankieMQ.git"
+  },
+  "author": "Quoc Trung Nguyen (Frankie)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MQCOMP3120-2020/individual-web-development-task-frankieMQ/issues"
+  },
+  "homepage": "https://github.com/MQCOMP3120-2020/individual-web-development-task-frankieMQ#readme"
+}
