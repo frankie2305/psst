@@ -80,6 +80,13 @@ userRoutes.post('/login', (req, res) => {
 		});
 });
 
+userRoutes.post('/retrieve', (req, res) => {
+	const { token } = req.body;
+	const user = jwt.verify(token, '¡Psst!');
+	if (user.id) res.json(user);
+	else res.status(401).json({ error: 'Token invalid or expired' });
+});
+
 userRoutes.put('/:id', (req, res) => {
 	const token = getJwt(req);
 	if (token) {

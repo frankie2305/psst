@@ -7,6 +7,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import { AuthContext } from '../../contexts/AuthContext';
 import { ModalContext } from '../../contexts/ModalContext';
+import { UserContext } from '../../contexts/UserContext';
 
 const LoginSchema = yup.object({
 	id: yup.string().trim().required('Username is required'),
@@ -16,6 +17,7 @@ const LoginSchema = yup.object({
 const LoginModal = () => {
 	const { setIsAuthenticated } = useContext(AuthContext);
 	const { showLogin, setShowLogin, setShowSignup } = useContext(ModalContext);
+	const { setUser } = useContext(UserContext);
 	const [error, setError] = useState('');
 
 	return (
@@ -36,6 +38,8 @@ const LoginModal = () => {
 					.then(data => {
 						if (data.error) setError(data.error);
 						else {
+							setUser(data);
+							localStorage.setItem('token', data.token);
 							setShowLogin(false);
 							setIsAuthenticated(true);
 						}

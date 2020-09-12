@@ -3,10 +3,12 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { AuthContext } from '../../contexts/AuthContext';
 import { ModalContext } from '../../contexts/ModalContext';
+import { UserContext } from '../../contexts/UserContext';
 
 const LogoutModal = () => {
 	const { setIsAuthenticated } = useContext(AuthContext);
 	const { showLogout, setShowLogout } = useContext(ModalContext);
+	const { setUser } = useContext(UserContext);
 
 	return (
 		<Modal show={showLogout} onHide={() => setShowLogout(false)}>
@@ -18,6 +20,8 @@ const LogoutModal = () => {
 				<Button
 					variant='secondary'
 					onClick={() => {
+						setUser(null);
+						localStorage.removeItem('token');
 						setShowLogout(false);
 						setIsAuthenticated(false);
 					}}>
