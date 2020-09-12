@@ -1,6 +1,12 @@
 {
 	"users": [
 		{
+			"id": "Frankie",
+			"password": "$2b$13$Vb25.21IjnBfkbr1a7d9MupybQdJcquM.oQewPf9df.XAcRsnfyg6",
+			"avatar": "http://robohash.org/Frankie",
+			"follows": []
+		},
+		{
 			"id": "Bobalooba",
 			"password": "bob",
 			"avatar": "http://robohash.org/bob",

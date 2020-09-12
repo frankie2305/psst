@@ -41,12 +41,16 @@ userRoutes.post('/signup', (req, res) => {
 					avatar: `http://robohash.org/${id}`,
 					follows: [],
 				};
+				const token = jwt.sign(newUser, '¡Psst!', {
+					algorithm: 'HS512',
+					expiresIn: '7d',
+				});
 				data.users = [newUser, ...data.users];
 				fs.writeFileSync(
 					'sampledata.json',
 					JSON.stringify(data, null, 4)
 				);
-				res.status(201).json(newUser);
+				res.status(201).json({ token, ...newUser });
 			})
 			.catch(err => console.error(err));
 });
