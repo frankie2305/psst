@@ -92,9 +92,11 @@ const Home = () => {
 				setEditContent={setEditContent}
 			/>
 			<DeleteModal postId={postId} setPostId={setPostId} />
+			<br />
+			<h1 className='text-center text-primary text-uppercase'>Home</h1>
+			<br />
 			{isAuthenticated ? (
 				<div>
-					<br />
 					<Form onSubmit={handleSubmit}>
 						<Form.Group>
 							<Form.Control
@@ -134,11 +136,11 @@ const Home = () => {
 									__html: post.content
 										.replace(
 											/@(\S+)/g,
-											'<a href="/users/$1">@$1</a>'
+											'<a href="/users/$1" class="text-info">@$1</a>'
 										)
 										.replace(
 											/#(\S+)/g,
-											'<a href="/hashtags/$1">#$1</a>'
+											'<a href="/hashtags/$1" class="text-warning">#$1</a>'
 										),
 								}}
 							/>

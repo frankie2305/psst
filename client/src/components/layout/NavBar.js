@@ -1,5 +1,7 @@
 import React, { useContext, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import NavBar from 'react-bootstrap/NavBar';
+import Nav from 'react-bootstrap/Nav';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -41,15 +43,24 @@ const CustomNavBar = () => {
 	});
 
 	return (
-		<NavBar expand='lg' bg='dark' variant='dark'>
+		<NavBar expand='lg' bg='dark' variant='dark' sticky='top'>
 			<NavBar.Brand href='/'>¡Psst!</NavBar.Brand>
-			<NavBar.Text>Social Network Redefined</NavBar.Text>
+			<Nav className='mr-auto'>
+				<Nav.Link href='/'>Home</Nav.Link>
+				<Nav.Link href='/users'>Users</Nav.Link>
+				<Nav.Link href={user && `/users/${user.id}`}>Profile</Nav.Link>
+			</Nav>
 			<NavBar.Toggle aria-controls='nav' />
 			<NavBar.Collapse id='nav' className='justify-content-end'>
 				{isAuthenticated ? (
 					<>
-						<NavBar.Text className='text-primary mr-3'>
-							Logged in as {user.id}
+						<NavBar.Text className='mr-3'>
+							Logged in as{' '}
+							<Link
+								to={`/user/${user.id}`}
+								className='text-primary'>
+								@{user.id}
+							</Link>
 						</NavBar.Text>
 						<Image
 							style={{ width: 28, height: 28 }}

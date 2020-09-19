@@ -8,6 +8,7 @@ import { AuthContextProvider } from './contexts/AuthContext';
 import { ModalContextProvider } from './contexts/ModalContext';
 import { UserContextProvider } from './contexts/UserContext';
 import Home from './components/routes/Home';
+import Users from './components/routes/Users';
 
 const App = () => (
 	<AuthContextProvider>
@@ -20,6 +21,7 @@ const App = () => (
 					<LogoutModal />
 					<Switch>
 						<Route exact path='/' component={Home} />
+						<Route exact path='/users' component={Users} />
 					</Switch>
 				</Router>
 			</UserContextProvider>
