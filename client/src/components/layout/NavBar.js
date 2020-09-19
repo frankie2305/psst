@@ -25,9 +25,18 @@ const CustomNavBar = () => {
 				body: JSON.stringify({ token }),
 			})
 				.then(res => res.json())
-				.then(data => setUser(data))
-				.catch(err => console.error(err))
-				.finally(() => setIsAuthenticated(true));
+				.then(data => {
+					if (data.error) {
+						setUser(null);
+						localStorage.removeItem('token');
+						setIsAuthenticated(false);
+						alert(data.error);
+					} else {
+						setUser(data);
+						setIsAuthenticated(true);
+					}
+				})
+				.catch(err => console.error(err));
 		else setIsAuthenticated(false);
 	});
 

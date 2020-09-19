@@ -70,6 +70,37 @@ postRoutes.put('/:id', (req, res) => {
 	} else res.status(401).json({ error: 'Token missing' });
 });
 
+postRoutes.put('/:id/likes', (req, res) => {
+	const token = getJwt(req);
+	if (token) {
+		const user = jwt.verify(token, '¡Psst!');
+		if (user.id) {
+			const { id } = req.params;
+			const postToUpdate = data.posts.find(post => post.id === id);
+			if (postToUpdate) {
+				let likes = postToUpdate.likes;
+				if (likes.includes(user.id)) {
+					likes = likes.filter(like => like !== user.id);
+				} else {
+					likes = [user.id, ...likes];
+				}
+				const updatedPost = {
+					...postToUpdate,
+					likes,
+				};
+				data.posts = data.posts.map(post =>
+					post.id === id ? updatedPost : post
+				);
+				fs.writeFileSync(
+					'sampledata.json',
+					JSON.stringify(data, null, 4)
+				);
+				res.json(updatedPost);
+			} else res.status(404).json({ error: 'Post not found' });
+		} else res.status(401).json({ error: 'Token invalid or expired' });
+	} else res.status(401).json({ error: 'Token missing' });
+});
+
 postRoutes.delete('/:id', (req, res) => {
 	const token = getJwt(req);
 	if (token) {
