@@ -7,7 +7,8 @@ export const ModalContextProvider = ({ children }) => {
 	const [showLogin, setShowLogin] = useState(false);
 	const [showLogout, setShowLogout] = useState(false);
 	const [postId, setPostId] = useState('');
-	const [editContent, setEditContent] = useState('');
+	const [initialContent, setInitialContent] = useState('');
+	const [editedContent, setEditedContent] = useState('');
 	const [showEdit, setShowEdit] = useState(false);
 	const [showDelete, setShowDelete] = useState(false);
 
@@ -22,8 +23,10 @@ export const ModalContextProvider = ({ children }) => {
 				setShowLogout,
 				postId,
 				setPostId,
-				editContent,
-				setEditContent,
+				initialContent,
+				setInitialContent,
+				editedContent,
+				setEditedContent,
 				showEdit,
 				setShowEdit,
 				showDelete,

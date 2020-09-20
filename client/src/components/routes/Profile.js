@@ -11,7 +11,7 @@ const Profile = ({ match }) => {
 	const [posts, setPosts] = useState([]);
 
 	const fetchPosts = () => {
-		fetch(`/api/posts/${id}`)
+		fetch(`/api/posts/users/${id}`)
 			.then(res => res.json())
 			.then(data => setPosts(data))
 			.catch(err => console.error(err));

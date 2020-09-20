@@ -12,6 +12,7 @@ import { UserContextProvider } from './contexts/UserContext';
 import Home from './components/routes/Home';
 import Users from './components/routes/Users';
 import Profile from './components/routes/Profile';
+import Hashtag from './components/routes/Hashtag';
 
 const App = () => (
 	<AuthContextProvider>
@@ -28,6 +29,7 @@ const App = () => (
 						<Route exact path='/' component={Home} />
 						<Route exact path='/users' component={Users} />
 						<Route path='/users/:id' component={Profile} />
+						<Route path='/hashtags/:hashtag' component={Hashtag} />
 					</Switch>
 				</Router>
 			</UserContextProvider>

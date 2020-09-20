@@ -13,7 +13,8 @@ const Post = ({ post, fetchPosts }) => {
 		setPostId,
 		setShowEdit,
 		setShowDelete,
-		setEditContent,
+		setInitialContent,
+		setEditedContent,
 	} = useContext(ModalContext);
 	const { user } = useContext(UserContext);
 
@@ -34,7 +35,8 @@ const Post = ({ post, fetchPosts }) => {
 
 	const handleClickEdit = post => {
 		setPostId(post.id);
-		setEditContent(post.content);
+		setInitialContent(post.content);
+		setEditedContent(post.content);
 		setShowEdit(true);
 	};
 

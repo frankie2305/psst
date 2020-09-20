@@ -51,27 +51,29 @@ const Home = () => {
 			<h1 className='text-center text-primary'>Home</h1>
 			<br />
 			{isAuthenticated ? (
-				<div>
-					<Form onSubmit={handleSubmit}>
-						<Form.Group>
-							<Form.Control
-								as='textarea'
-								rows={3}
-								placeholder="What's on your mind?"
-								value={content}
-								onChange={handleChange}></Form.Control>
-						</Form.Group>
-						<Button
-							variant='primary'
-							type='submit'
-							block
-							disabled={!content}>
-							Submit
-						</Button>
-					</Form>
-				</div>
+				<>
+					<div>
+						<Form onSubmit={handleSubmit}>
+							<Form.Group>
+								<Form.Control
+									as='textarea'
+									rows={3}
+									placeholder="What's on your mind?"
+									value={content}
+									onChange={handleChange}></Form.Control>
+							</Form.Group>
+							<Button
+								variant='primary'
+								type='submit'
+								block
+								disabled={!content}>
+								Submit
+							</Button>
+						</Form>
+					</div>
+					<br />
+				</>
 			) : null}
-			<br />
 			{posts.map(post => (
 				<Post key={post.id} post={post} fetchPosts={fetchPosts} />
 			))}

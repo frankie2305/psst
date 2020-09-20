@@ -17,9 +17,17 @@ postRoutes.get('/', (req, res) => {
 	res.json(data.posts);
 });
 
-postRoutes.get('/:user', (req, res) => {
+postRoutes.get('/users/:user', (req, res) => {
 	const { user } = req.params;
 	const posts = data.posts.filter(post => post.user === user);
+	res.json(posts);
+});
+
+postRoutes.get('/hashtags/:hashtag', (req, res) => {
+	const { hashtag } = req.params;
+	const posts = data.posts.filter(post =>
+		post.content.includes(`#${hashtag}`)
+	);
 	res.json(posts);
 });
 

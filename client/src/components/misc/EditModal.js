@@ -8,20 +8,23 @@ const EditModal = () => {
 	const {
 		postId,
 		setPostId,
-		editContent,
-		setEditContent,
+		initialContent,
+		setInitialContent,
+		editedContent,
+		setEditedContent,
 		showEdit,
 		setShowEdit,
 	} = useContext(ModalContext);
 
 	const hideEdit = () => {
 		setPostId('');
-		setEditContent('');
+		setInitialContent('');
+		setEditedContent('');
 		setShowEdit(false);
 	};
 
 	const handleChange = e => {
-		setEditContent(e.target.value);
+		setEditedContent(e.target.value);
 	};
 
 	const handleSubmit = () => {
@@ -33,7 +36,7 @@ const EditModal = () => {
 			},
 			body: JSON.stringify({
 				timestamp: new Date().toLocaleString(),
-				content: editContent,
+				content: editedContent,
 			}),
 		})
 			.then(res => res.json())
@@ -56,7 +59,7 @@ const EditModal = () => {
 						<Form.Control
 							type='text'
 							placeholder="What's on your mind?"
-							value={editContent}
+							value={editedContent}
 							onChange={handleChange}></Form.Control>
 					</Form.Group>
 				</Form>
@@ -65,7 +68,10 @@ const EditModal = () => {
 				<Button variant='secondary' onClick={hideEdit}>
 					Cancel
 				</Button>
-				<Button variant='primary' onClick={handleSubmit}>
+				<Button
+					variant='primary'
+					onClick={handleSubmit}
+					disabled={editedContent === initialContent}>
 					Submit
 				</Button>
 			</Modal.Footer>
