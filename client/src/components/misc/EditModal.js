@@ -4,8 +4,15 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { ModalContext } from '../../contexts/ModalContext';
 
-const EditModal = ({ postId, setPostId, editContent, setEditContent }) => {
-	const { showEdit, setShowEdit } = useContext(ModalContext);
+const EditModal = () => {
+	const {
+		postId,
+		setPostId,
+		editContent,
+		setEditContent,
+		showEdit,
+		setShowEdit,
+	} = useContext(ModalContext);
 
 	const hideEdit = () => {
 		setPostId('');

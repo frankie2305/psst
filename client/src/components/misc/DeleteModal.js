@@ -3,8 +3,10 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { ModalContext } from '../../contexts/ModalContext';
 
-const DeleteModal = ({ postId, setPostId }) => {
-	const { showDelete, setShowDelete } = useContext(ModalContext);
+const DeleteModal = () => {
+	const { postId, setPostId, showDelete, setShowDelete } = useContext(
+		ModalContext
+	);
 
 	const hideDelete = () => {
 		setPostId('');

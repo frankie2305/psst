@@ -62,8 +62,8 @@
         {
             "id": "7658b889-bdd3-4c74-87a9-483ad1c7a9a4",
             "user": "Frankie",
-            "timestamp": "19/09/2020, 23:59:45",
-            "content": "This is a @mention and this is a #hashtag .....",
+            "timestamp": "20/09/2020, 23:18:03",
+            "content": "This post mentions @Frankie and has a #hashtag",
             "likes": [
                 "Frankie"
             ]

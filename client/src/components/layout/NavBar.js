@@ -45,11 +45,9 @@ const CustomNavBar = () => {
 	return (
 		<NavBar expand='lg' bg='dark' variant='dark' sticky='top'>
 			<NavBar.Brand href='/'>¡Psst!</NavBar.Brand>
-			<Nav className='mr-auto'>
-				<Nav.Link href='/'>Home</Nav.Link>
-				<Nav.Link href='/users'>Users</Nav.Link>
-				<Nav.Link href={user && `/users/${user.id}`}>Profile</Nav.Link>
-			</Nav>
+			<Nav.Link href='/'>Home</Nav.Link>
+			<Nav.Link href='/users'>Users</Nav.Link>
+			<Nav.Link href={user && `/users/${user.id}`}>Profile</Nav.Link>
 			<NavBar.Toggle aria-controls='nav' />
 			<NavBar.Collapse id='nav' className='justify-content-end'>
 				{isAuthenticated ? (

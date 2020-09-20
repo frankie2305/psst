@@ -17,11 +17,10 @@ postRoutes.get('/', (req, res) => {
 	res.json(data.posts);
 });
 
-postRoutes.get('/:id', (req, res) => {
-	const { id } = req.params;
-	const post = data.posts.find(post => post.id === id);
-	if (post) res.json(post);
-	else res.status(404).json({ error: 'Post not found' });
+postRoutes.get('/:user', (req, res) => {
+	const { user } = req.params;
+	const posts = data.posts.filter(post => post.user === user);
+	res.json(posts);
 });
 
 postRoutes.post('/', (req, res) => {
