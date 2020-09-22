@@ -24,6 +24,13 @@ userRoutes.get('/:id', (req, res) => {
 	else res.status(404).json({ error: 'User not found' });
 });
 
+userRoutes.get('/:id/followers', (req, res) => {
+	const { id } = req.params;
+	const user = data.users.find(user => user.id === id);
+	if (user) res.json(data.users.filter(user => user.follows.includes(id)));
+	else res.status(404).json({ error: 'User not found' });
+});
+
 userRoutes.post('/signup', (req, res) => {
 	const { id, password } = req.body;
 	const user = data.users.find(user => user.id === id);
@@ -82,9 +89,11 @@ userRoutes.post('/login', (req, res) => {
 
 userRoutes.post('/retrieve', (req, res) => {
 	const { token } = req.body;
-	const user = jwt.verify(token, '¡Psst!');
-	if (user.id) res.json(user);
-	else res.status(401).json({ error: 'Token invalid or expired' });
+	const currentUser = jwt.verify(token, '¡Psst!');
+	if (currentUser.id) {
+		const user = data.users.find(user => user.id === currentUser.id);
+		res.json(user);
+	} else res.status(401).json({ error: 'Token invalid or expired' });
 });
 
 userRoutes.put('/:id', (req, res) => {
@@ -92,10 +101,10 @@ userRoutes.put('/:id', (req, res) => {
 	if (token) {
 		const user = jwt.verify(token, '¡Psst!');
 		if (user.id) {
-			const { oldId } = req.params;
+			const { id: oldId } = req.params;
 			const userToUpdate = data.users.find(user => user.id === oldId);
 			if (userToUpdate) {
-				const { newId, password, avatar } = req.body;
+				const { id: newId, password, avatar } = req.body;
 				if (user.id === oldId || (!newId && !password && !avatar)) {
 					const updatedUser = { ...userToUpdate, ...req.body };
 					data.users = data.users.map(user =>
@@ -110,6 +119,37 @@ userRoutes.put('/:id', (req, res) => {
 					res.status(401).json({
 						error: "You don't have permission to edit this account",
 					});
+			} else res.status(404).json({ error: 'User not found' });
+		} else res.status(401).json({ error: 'Token invalid or expired' });
+	} else res.status(401).json({ error: 'Token missing' });
+});
+
+userRoutes.put('/:id/follows', (req, res) => {
+	const token = getJwt(req);
+	if (token) {
+		const currentUser = jwt.verify(token, '¡Psst!');
+		if (currentUser.id) {
+			const { id } = req.params;
+			const userToUpdate = data.users.find(
+				user => user.id === currentUser.id
+			);
+			const userToFollow = data.users.find(user => user.id === id);
+			if (userToFollow) {
+				let follows = userToUpdate.follows;
+				if (follows.includes(id)) {
+					follows = follows.filter(follow => follow !== id);
+				} else {
+					follows = [userToFollow.id, ...follows];
+				}
+				const updatedUser = { ...userToUpdate, follows };
+				data.users = data.users.map(user =>
+					user.id === userToUpdate.id ? updatedUser : user
+				);
+				fs.writeFileSync(
+					'sampledata.json',
+					JSON.stringify(data, null, 4)
+				);
+				res.json(updatedUser);
 			} else res.status(404).json({ error: 'User not found' });
 		} else res.status(401).json({ error: 'Token invalid or expired' });
 	} else res.status(401).json({ error: 'Token missing' });

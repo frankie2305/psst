@@ -4,13 +4,18 @@
             "id": "Frankie",
             "password": "$2b$13$Vb25.21IjnBfkbr1a7d9MupybQdJcquM.oQewPf9df.XAcRsnfyg6",
             "avatar": "http://robohash.org/Frankie",
-            "follows": []
+            "follows": [
+                "Contrary",
+                "Jimbulator",
+                "Bobalooba"
+            ]
         },
         {
             "id": "Bobalooba",
             "password": "bob",
             "avatar": "http://robohash.org/bob",
             "follows": [
+                "Frankie",
                 "Barfoo",
                 "Jimbulator"
             ]
@@ -20,6 +25,7 @@
             "password": "jim",
             "avatar": "http://robohash.org/jim",
             "follows": [
+                "Frankie",
                 "Bean",
                 "Contrary"
             ]
@@ -29,6 +35,7 @@
             "password": "mary",
             "avatar": "http://robohash.org/mary",
             "follows": [
+                "Frankie",
                 "Barfoo"
             ]
         },
