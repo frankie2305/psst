@@ -52,31 +52,30 @@ const Home = () => {
 			<br />
 			{isAuthenticated ? (
 				<>
-					<div>
-						<Form onSubmit={handleSubmit}>
-							<Form.Group>
-								<Form.Control
-									as='textarea'
-									rows={3}
-									placeholder="What's on your mind?"
-									value={content}
-									onChange={handleChange}></Form.Control>
-							</Form.Group>
-							<Button
-								variant='primary'
-								type='submit'
-								block
-								disabled={!content}>
-								Submit
-							</Button>
-						</Form>
-					</div>
+					<Form onSubmit={handleSubmit}>
+						<Form.Group>
+							<Form.Control
+								as='textarea'
+								rows={3}
+								placeholder="What's on your mind?"
+								value={content}
+								onChange={handleChange}></Form.Control>
+						</Form.Group>
+						<Button
+							variant='primary'
+							type='submit'
+							block
+							disabled={!content}>
+							Submit
+						</Button>
+					</Form>
 					<br />
 				</>
 			) : null}
 			{posts.map(post => (
 				<Post key={post.id} post={post} fetchPosts={fetchPosts} />
 			))}
+			<br />
 		</Container>
 	);
 };

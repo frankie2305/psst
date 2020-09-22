@@ -23,10 +23,27 @@ postRoutes.get('/users/:user', (req, res) => {
 	res.json(posts);
 });
 
+postRoutes.get('/mentions/:mention', (req, res) => {
+	const { mention } = req.params;
+	const user = data.users.find(user => user.id === mention);
+	if (user) {
+		const posts = data.posts.filter(
+			post =>
+				post.content.includes(`@${mention} `) ||
+				post.content.indexOf(`@${mention}`) + mention.length ===
+					post.content.length - 1
+		);
+		res.json(posts);
+	} else res.status(404).json({ error: 'User not found' });
+});
+
 postRoutes.get('/hashtags/:hashtag', (req, res) => {
 	const { hashtag } = req.params;
-	const posts = data.posts.filter(post =>
-		post.content.includes(`#${hashtag}`)
+	const posts = data.posts.filter(
+		post =>
+			post.content.includes(`#${hashtag} `) ||
+			post.content.indexOf(`#${hashtag}`) + hashtag.length ===
+				post.content.length - 1
 	);
 	res.json(posts);
 });

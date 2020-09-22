@@ -64,9 +64,9 @@ const Profile = ({ match }) => {
 
 	return (
 		<Container>
+			<br />
 			{user ? (
 				<>
-					<br />
 					<h1 className='text-center text-primary'>{id}'s Profile</h1>
 					<br />
 					<Row>
@@ -146,36 +146,59 @@ const Profile = ({ match }) => {
 										</Accordion.Collapse>
 									</Card>
 								</Accordion>
+							) : currentUser.follows.includes(user.id) ? (
+								<Button
+									variant='danger'
+									block
+									onClick={handleClick}>
+									Unfollow
+								</Button>
 							) : (
-								<Button block onClick={handleClick}>
-									{currentUser.follows.includes(user.id)
-										? 'Unfollow'
-										: 'Follow'}
+								<Button
+									variant='success'
+									block
+									onClick={handleClick}>
+									Follow
 								</Button>
 							)}
+							<Button
+								variant='info'
+								block
+								href={`/mentions/${user.id}`}>
+								Mentions of {user.id}
+							</Button>
 						</Col>
 						<Col xs={12} md={8}>
-							<h2 className='text-center text-primary'>
+							<h2 className='text-center text-warning'>
 								Posts ({posts.length})
 							</h2>
-							<br />
-							{posts.map(post => (
-								<Post
-									key={post.id}
-									post={post}
-									fetchPosts={fetchPosts}
-								/>
-							))}
+							{posts.length === 0 ? (
+								<h3 className='text-center text-info'>
+									Start writing your first post today!
+								</h3>
+							) : (
+								<>
+									<br />
+									{posts.map(post => (
+										<Post
+											key={post.id}
+											post={post}
+											fetchPosts={fetchPosts}
+										/>
+									))}
+								</>
+							)}
 						</Col>
 					</Row>
 				</>
 			) : (
 				<>
-					<br />
-					<h1 className='text-center text-danger'>User Not Found!</h1>
-					<br />
+					<h1 className='text-center text-danger'>
+						User {id} does not exist!
+					</h1>
 				</>
 			)}
+			<br />
 		</Container>
 	);
 };
