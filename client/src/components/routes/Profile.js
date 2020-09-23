@@ -14,7 +14,7 @@ import Post from '../misc/Post';
 import User from '../misc/User';
 
 const Profile = ({ match }) => {
-	const { id } = match.params;
+	const { username } = match.params;
 	const { isAuthenticated } = useContext(AuthContext);
 	const { user: currentUser, setUser: setCurrentUser } = useContext(
 		UserContext
@@ -25,21 +25,21 @@ const Profile = ({ match }) => {
 	const [followers, setFollowers] = useState([]);
 
 	const fetchPosts = () => {
-		fetch(`/api/posts/users/${id}`)
+		fetch(`/api/posts/users/${username}`)
 			.then(res => res.json())
 			.then(data => setPosts(data))
 			.catch(err => console.error(err));
 	};
 
 	const fetchFollowers = () => {
-		fetch(`/api/users/${id}/followers`)
+		fetch(`/api/users/${username}/followers`)
 			.then(res => res.json())
 			.then(data => setFollowers(data))
 			.catch(err => console.error(err));
 	};
 
 	const handleClick = () => {
-		fetch(`/api/users/${id}/follows`, {
+		fetch(`/api/users/${username}/follows`, {
 			method: 'PUT',
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -55,7 +55,7 @@ const Profile = ({ match }) => {
 	};
 
 	useEffect(() => {
-		fetch(`/api/users/${id}`)
+		fetch(`/api/users/${username}`)
 			.then(res => res.json())
 			.then(data => {
 				if (!data.error) {
@@ -69,14 +69,14 @@ const Profile = ({ match }) => {
 	});
 
 	if (dataFetched)
-		if (isAuthenticated)
+		if (isAuthenticated) {
 			return (
 				<Container>
 					<br />
 					{user ? (
 						<>
 							<h1 className='text-center text-primary'>
-								{id}'s Profile
+								{username}'s Profile
 							</h1>
 							<br />
 							<Row>
@@ -108,12 +108,15 @@ const Profile = ({ match }) => {
 																{followers.map(
 																	follower => (
 																		<ListGroup.Item
+																			key={
+																				follower.id
+																			}
 																			action
-																			href={`/users/${follower.id}`}
+																			href={`/users/${follower.username}`}
 																			className='text-success'>
 																			@
 																			{
-																				follower.id
+																				follower.username
 																			}
 																		</ListGroup.Item>
 																	)
@@ -140,19 +143,22 @@ const Profile = ({ match }) => {
 														0 ? (
 															<Card.Text className='text-danger'>
 																You don't follow
-																anybody
+																anybody!
 															</Card.Text>
 														) : (
 															<ListGroup variant='flush'>
 																{user.follows.map(
 																	follow => (
 																		<ListGroup.Item
+																			key={
+																				follow.id
+																			}
 																			action
-																			href={`/users/${follow}`}
+																			href={`/users/${follow.username}`}
 																			className='text-danger'>
 																			@
 																			{
-																				follow
+																				follow.username
 																			}
 																		</ListGroup.Item>
 																	)
@@ -183,8 +189,8 @@ const Profile = ({ match }) => {
 									<Button
 										variant='info'
 										block
-										href={`/mentions/${user.id}`}>
-										Mentions of {user.id}
+										href={`/mentions/${username}`}>
+										Mentions of {username}
 									</Button>
 								</Col>
 								<Col xs={12} md={8}>
@@ -193,7 +199,7 @@ const Profile = ({ match }) => {
 									</h2>
 									{posts.length === 0 ? (
 										<h3 className='text-center text-info'>
-											Start writing your first post today!
+											{username} doesn't have any posts!
 										</h3>
 									) : (
 										<>
@@ -213,14 +219,14 @@ const Profile = ({ match }) => {
 					) : (
 						<>
 							<h1 className='text-center text-danger'>
-								User {id} does not exist!
+								User {username} does not exist!
 							</h1>
 						</>
 					)}
 					<br />
 				</Container>
 			);
-		else return <Redirect to='/' />;
+		} else return <Redirect to='/' />;
 	else
 		return (
 			<div className='d-flex justify-content-center'>

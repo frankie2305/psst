@@ -20,11 +20,9 @@ const CustomNavBar = () => {
 
 		if (token)
 			fetch('/api/users/retrieve', {
-				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify({ token }),
 			})
 				.then(res => res.json())
 				.then(data => {
@@ -49,7 +47,7 @@ const CustomNavBar = () => {
 			{isAuthenticated && (
 				<>
 					<Nav.Link href='/users'>Users</Nav.Link>
-					<Nav.Link href={user && `/users/${user.id}`}>
+					<Nav.Link href={`/users/${user.username}`}>
 						Profile
 					</Nav.Link>
 				</>
@@ -61,9 +59,9 @@ const CustomNavBar = () => {
 						<NavBar.Text className='mr-3'>
 							Logged in as{' '}
 							<Link
-								to={`/user/${user.id}`}
+								to={`/users/${user.username}`}
 								className='text-primary'>
-								@{user.id}
+								@{user.username}
 							</Link>
 						</NavBar.Text>
 						<Image

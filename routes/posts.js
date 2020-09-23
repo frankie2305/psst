@@ -1,10 +1,10 @@
-const fs = require('fs');
-const uuid = require('uuid');
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const postRoutes = require('express').Router();
+const Post = require('../models/post');
+const User = require('../models/user');
 
-const json = fs.readFileSync('sampledata.json');
-const data = JSON.parse(json);
+const secret = process.env.SECRET;
 
 const getJwt = req => {
 	const authorization = req.get('authorization');
@@ -14,54 +14,86 @@ const getJwt = req => {
 };
 
 postRoutes.get('/', (req, res) => {
-	res.json(data.posts);
+	Post.find({})
+		.populate('user')
+		.sort('-timestamp')
+		.exec((err, posts) => {
+			if (err) console.error(err.message);
+			else res.json(posts);
+		});
 });
 
-postRoutes.get('/users/:user', (req, res) => {
-	const { user } = req.params;
-	const posts = data.posts.filter(post => post.user === user);
-	res.json(posts);
+postRoutes.get('/users/:username', (req, res) => {
+	const { username } = req.params;
+	User.findOne({ username }).then(user => {
+		if (user) {
+			Post.find({ user: user._id.toString() })
+				.populate('user')
+				.sort('-timestamp')
+				.exec((err, posts) => {
+					if (err) console.error(err.message);
+					else res.json(posts);
+				});
+		} else res.status(404).json({ error: 'User not found' });
+	});
 });
 
 postRoutes.get('/mentions/:mention', (req, res) => {
 	const { mention } = req.params;
-	const user = data.users.find(user => user.id === mention);
-	if (user) {
-		const posts = data.posts.filter(
-			post =>
-				post.content.includes(`@${mention} `) ||
-				post.content.indexOf(`@${mention}`) + mention.length ===
-					post.content.length - 1
-		);
-		res.json(posts);
-	} else res.status(404).json({ error: 'User not found' });
+	User.findOne({ username: mention }).then(user => {
+		if (user) {
+			Post.find({})
+				.populate('user')
+				.exec((err, posts) => {
+					if (err) console.error(err.message);
+					else
+						res.json(
+							posts.filter(
+								post =>
+									new RegExp(`@${mention}\\W+`, 'g').test(
+										post.content
+									) || post.content.endsWith(`@${mention}`)
+							)
+						);
+				});
+		} else res.status(404).json({ error: 'User not found' });
+	});
 });
 
 postRoutes.get('/hashtags/:hashtag', (req, res) => {
 	const { hashtag } = req.params;
-	const posts = data.posts.filter(
-		post =>
-			post.content.includes(`#${hashtag} `) ||
-			post.content.indexOf(`#${hashtag}`) + hashtag.length ===
-				post.content.length - 1
-	);
-	res.json(posts);
+	Post.find({})
+		.populate('user')
+		.exec((err, posts) => {
+			if (err) console.error(err.message);
+			else
+				res.json(
+					posts.filter(
+						post =>
+							new RegExp(`#${hashtag}\\W+`, 'g').test(
+								post.content
+							) || post.content.endsWith(`#${hashtag}`)
+					)
+				);
+		});
 });
 
 postRoutes.post('/', (req, res) => {
 	const token = getJwt(req);
 	if (token) {
-		const user = jwt.verify(token, '¡Psst!');
-		if (user.id) {
-			const newPost = {
-				id: uuid.v4(),
-				user: user.id,
+		const { id } = jwt.verify(token, secret);
+		if (id) {
+			const post = new Post({
+				user: id,
 				...req.body,
 				likes: [],
-			};
-			data.posts = [newPost, ...data.posts];
-			fs.writeFileSync('sampledata.json', JSON.stringify(data, null, 4));
-			res.status(201).json(newPost);
+			});
+			User.findById(id).then(user => {
+				user.posts = [post._id, ...user.posts];
+				user.save().then(user =>
+					post.save().then(post => res.status(201).json(post))
+				);
+			});
 		} else res.status(401).json({ error: 'Token invalid or expired' });
 	} else res.status(401).json({ error: 'Token missing' });
 });
@@ -69,27 +101,17 @@ postRoutes.post('/', (req, res) => {
 postRoutes.put('/:id', (req, res) => {
 	const token = getJwt(req);
 	if (token) {
-		const user = jwt.verify(token, '¡Psst!');
-		if (user.id) {
+		const { id: userId } = jwt.verify(token, secret);
+		if (userId) {
 			const { id } = req.params;
-			const postToUpdate = data.posts.find(post => post.id === id);
-			if (postToUpdate) {
-				const { timestamp, content } = req.body;
-				if (postToUpdate.user === user.id || (!timestamp && !content)) {
-					const updatedPost = { ...postToUpdate, ...req.body };
-					data.posts = data.posts.map(post =>
-						post.id === id ? updatedPost : post
-					);
-					fs.writeFileSync(
-						'sampledata.json',
-						JSON.stringify(data, null, 4)
-					);
-					res.json(updatedPost);
-				} else
-					res.status(401).json({
-						error: "You don't have permission to edit this post",
-					});
-			} else res.status(404).json({ error: 'Post not found' });
+			const { timestamp, content } = req.body;
+			Post.findById(id).then(post => {
+				if (post) {
+					post.timestamp = timestamp;
+					post.content = content;
+					post.save().then(post => res.json(post));
+				} else res.status(404).json({ error: 'Post not found' });
+			});
 		} else res.status(401).json({ error: 'Token invalid or expired' });
 	} else res.status(401).json({ error: 'Token missing' });
 });
@@ -97,30 +119,21 @@ postRoutes.put('/:id', (req, res) => {
 postRoutes.put('/:id/likes', (req, res) => {
 	const token = getJwt(req);
 	if (token) {
-		const user = jwt.verify(token, '¡Psst!');
-		if (user.id) {
+		const { id: likerId } = jwt.verify(token, secret);
+		if (likerId) {
 			const { id } = req.params;
-			const postToUpdate = data.posts.find(post => post.id === id);
-			if (postToUpdate) {
-				let likes = postToUpdate.likes;
-				if (likes.includes(user.id)) {
-					likes = likes.filter(like => like !== user.id);
-				} else {
-					likes = [user.id, ...likes];
-				}
-				const updatedPost = {
-					...postToUpdate,
-					likes,
-				};
-				data.posts = data.posts.map(post =>
-					post.id === id ? updatedPost : post
-				);
-				fs.writeFileSync(
-					'sampledata.json',
-					JSON.stringify(data, null, 4)
-				);
-				res.json(updatedPost);
-			} else res.status(404).json({ error: 'Post not found' });
+			Post.findById(id).then(post => {
+				if (post) {
+					let likes = post.likes;
+					if (likes.includes(likerId))
+						likes = likes.filter(
+							like => like.toString() !== likerId
+						);
+					else likes = [likerId, ...likes];
+					post.likes = likes;
+					post.save().then(post => res.json(post));
+				} else res.status(404).json({ error: 'Post not found' });
+			});
 		} else res.status(401).json({ error: 'Token invalid or expired' });
 	} else res.status(401).json({ error: 'Token missing' });
 });
@@ -128,24 +141,14 @@ postRoutes.put('/:id/likes', (req, res) => {
 postRoutes.delete('/:id', (req, res) => {
 	const token = getJwt(req);
 	if (token) {
-		const user = jwt.verify(token, '¡Psst!');
-		if (user.id) {
+		const { id: userId } = jwt.verify(token, secret);
+		if (userId) {
 			const { id } = req.params;
-			const postToDelete = data.posts.find(post => post.id === id);
-			if (postToDelete) {
-				if (postToDelete.user === user.id) {
-					data.posts = data.posts.filter(post => post.id !== id);
-					fs.writeFileSync(
-						'sampledata.json',
-						JSON.stringify(data, null, 4)
-					);
-					res.json({ message: 'Post deleted' });
-				} else
-					res.status(401).json({
-						error: "You don't have permission to delete this post",
-					});
-			} else res.status(404).json({ error: 'Post not found' });
-		} else res.status(401).json({ error: 'Token invalid' });
+			Post.findById(id).then(post => {
+				if (post) post.deleteOne().then(post => res.json(post));
+				else res.status(404).json({ error: 'Post not found' });
+			});
+		} else res.status(401).json({ error: 'Token invalid or expired' });
 	} else res.status(401).json({ error: 'Token missing' });
 });
 

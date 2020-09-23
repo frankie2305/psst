@@ -10,7 +10,7 @@ import { ModalContext } from '../../contexts/ModalContext';
 import { UserContext } from '../../contexts/UserContext';
 
 const SignupSchema = yup.object({
-	id: yup
+	username: yup
 		.string()
 		.trim()
 		.required('Username is required')
@@ -41,7 +41,7 @@ const SignupModal = () => {
 
 	return (
 		<Formik
-			initialValues={{ id: '', password: '', _password: '' }}
+			initialValues={{ username: '', password: '', _password: '' }}
 			validationSchema={SignupSchema}
 			onSubmit={(values, actions) => {
 				actions.resetForm();
@@ -57,7 +57,7 @@ const SignupModal = () => {
 					.then(data => {
 						if (data.error) setError(data.error);
 						else {
-							setUser(data);
+							setUser(data.user);
 							localStorage.setItem('token', data.token);
 							setShowSignup(false);
 							setIsAuthenticated(true);
@@ -90,13 +90,16 @@ const SignupModal = () => {
 									<Form.Control
 										type='text'
 										placeholder='Enter username'
-										value={props.values.id}
-										onChange={props.handleChange('id')}
+										value={props.values.username}
+										onChange={props.handleChange(
+											'username'
+										)}
 										onBlur={props.handleBlur(
-											'id'
+											'username'
 										)}></Form.Control>
 									<Form.Text className='text-danger'>
-										{props.touched.id && props.errors.id}
+										{props.touched.username &&
+											props.errors.username}
 									</Form.Text>
 								</Form.Group>
 								<Form.Group>

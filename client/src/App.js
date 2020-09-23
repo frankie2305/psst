@@ -29,7 +29,7 @@ const App = () => (
 					<Switch>
 						<Route exact path='/' component={Home} />
 						<Route exact path='/users' component={Users} />
-						<Route path='/users/:id' component={Profile} />
+						<Route path='/users/:username' component={Profile} />
 						<Route path='/mentions/:mention' component={Mention} />
 						<Route path='/hashtags/:hashtag' component={Hashtag} />
 					</Switch>

@@ -10,7 +10,7 @@ import { ModalContext } from '../../contexts/ModalContext';
 import { UserContext } from '../../contexts/UserContext';
 
 const LoginSchema = yup.object({
-	id: yup.string().trim().required('Username is required'),
+	username: yup.string().trim().required('Username is required'),
 	password: yup.string().trim().required('Password is required'),
 });
 
@@ -22,7 +22,7 @@ const LoginModal = () => {
 
 	return (
 		<Formik
-			initialValues={{ id: '', password: '' }}
+			initialValues={{ username: '', password: '' }}
 			validationSchema={LoginSchema}
 			onSubmit={(values, actions) => {
 				actions.resetForm();
@@ -38,7 +38,7 @@ const LoginModal = () => {
 					.then(data => {
 						if (data.error) setError(data.error);
 						else {
-							setUser(data);
+							setUser(data.user);
 							localStorage.setItem('token', data.token);
 							setShowLogin(false);
 							setIsAuthenticated(true);
@@ -72,13 +72,16 @@ const LoginModal = () => {
 									<Form.Control
 										type='text'
 										placeholder='Enter username'
-										value={props.values.id}
-										onChange={props.handleChange('id')}
+										value={props.values.username}
+										onChange={props.handleChange(
+											'username'
+										)}
 										onBlur={props.handleBlur(
-											'id'
+											'username'
 										)}></Form.Control>
 									<Form.Text className='text-danger'>
-										{props.touched.id && props.errors.id}
+										{props.touched.username &&
+											props.errors.username}
 									</Form.Text>
 								</Form.Group>
 								<Form.Group>

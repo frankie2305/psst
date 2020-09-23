@@ -7,12 +7,12 @@ const User = ({ user }) => {
 	const { user: currentUser } = useContext(UserContext);
 
 	return (
-		<Link to={`/users/${user.id}`}>
+		<Link to={`/users/${user.username}`}>
 			<Card border={user.id === currentUser.id && 'primary'}>
 				<Card.Img variant='top' src={user.avatar}></Card.Img>
 				<Card.Body>
 					<Card.Title className='text-center text-primary'>
-						@{user.id}
+						@{user.username}
 					</Card.Title>
 				</Card.Body>
 			</Card>

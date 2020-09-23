@@ -24,6 +24,7 @@ const LogoutModal = () => {
 						localStorage.removeItem('token');
 						setShowLogout(false);
 						setIsAuthenticated(false);
+						window.location.reload();
 					}}>
 					Sure, let me log out
 				</Button>

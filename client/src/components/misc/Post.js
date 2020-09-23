@@ -5,10 +5,12 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbUpOutlinedIcon from '@material-ui/icons/ThumbUpOutlined';
+import { AuthContext } from '../../contexts/AuthContext';
 import { ModalContext } from '../../contexts/ModalContext';
 import { UserContext } from '../../contexts/UserContext';
 
 const Post = ({ post, fetchPosts }) => {
+	const { isAuthenticated } = useContext(AuthContext);
 	const {
 		setPostId,
 		setShowEdit,
@@ -50,7 +52,9 @@ const Post = ({ post, fetchPosts }) => {
 			<Card>
 				<Card.Header>
 					<Card.Title className='text-primary'>
-						<Link to={`/users/${post.user}`}>@{post.user}</Link>
+						<Link to={`/users/${post.user.username}`}>
+							@{post.user.username}
+						</Link>
 					</Card.Title>
 				</Card.Header>
 				<Card.Body>
@@ -61,57 +65,59 @@ const Post = ({ post, fetchPosts }) => {
 						dangerouslySetInnerHTML={{
 							__html: post.content
 								.replace(
-									/@(\S+)/g,
+									/@(\w+)/g,
 									'<a href="/users/$1" class="text-info">@$1</a>'
 								)
 								.replace(
-									/#(\S+)/g,
+									/#(\w+)/g,
 									'<a href="/hashtags/$1" class="text-warning">#$1</a>'
 								),
 						}}
 					/>
 				</Card.Body>
-				<Card.Footer>
-					<Row className='justify-content-between'>
-						<Row className='align-items-center'>
-							{user && post.likes.includes(user.id) ? (
-								<ThumbUpIcon
-									style={{ cursor: 'pointer' }}
-									color='primary'
-									className='ml-4 mr-4'
-									onClick={() => handleClickLike(post)}
-								/>
-							) : (
-								<ThumbUpOutlinedIcon
-									style={{ cursor: 'pointer' }}
-									color='primary'
-									className='ml-4 mr-4'
-									onClick={() => handleClickLike(post)}
-								/>
-							)}
-							{post.likes.length > 0 ? (
-								<Card.Text className='text-muted small'>
-									Liked by {post.likes.length} people{' '}
-								</Card.Text>
+				{isAuthenticated ? (
+					<Card.Footer>
+						<Row className='justify-content-between'>
+							<Row className='align-items-center'>
+								{post.likes.includes(user.id) ? (
+									<ThumbUpIcon
+										style={{ cursor: 'pointer' }}
+										color='primary'
+										className='ml-4 mr-4'
+										onClick={() => handleClickLike(post)}
+									/>
+								) : (
+									<ThumbUpOutlinedIcon
+										style={{ cursor: 'pointer' }}
+										color='primary'
+										className='ml-4 mr-4'
+										onClick={() => handleClickLike(post)}
+									/>
+								)}
+								{post.likes.length > 0 ? (
+									<Card.Text className='text-muted small'>
+										Liked by {post.likes.length} people{' '}
+									</Card.Text>
+								) : null}
+							</Row>
+							{post.user.id === user.id ? (
+								<div>
+									<Button
+										variant='success'
+										onClick={() => handleClickEdit(post)}>
+										Edit
+									</Button>
+									<Button
+										variant='danger'
+										className='ml-2 mr-2'
+										onClick={() => handleClickDelete(post)}>
+										Delete
+									</Button>
+								</div>
 							) : null}
 						</Row>
-						{user && post.user === user.id ? (
-							<div>
-								<Button
-									variant='success'
-									onClick={() => handleClickEdit(post)}>
-									Edit
-								</Button>
-								<Button
-									variant='danger'
-									className='ml-2 mr-2'
-									onClick={() => handleClickDelete(post)}>
-									Delete
-								</Button>
-							</div>
-						) : null}
-					</Row>
-				</Card.Footer>
+					</Card.Footer>
+				) : null}
 			</Card>
 			<br />
 		</>
