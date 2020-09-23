@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/users');
@@ -14,6 +15,10 @@ app.use(express.static('build'));
 
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
+
+app.get('*', (req, res) => {
+	res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+});
 
 const url = process.env.MONGODB_URI;
 mongoose
