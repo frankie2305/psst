@@ -86,13 +86,14 @@ postRoutes.post('/', (req, res) => {
 			const post = new Post({
 				user: id,
 				...req.body,
-				likes: [],
 			});
 			User.findById(id).then(user => {
-				user.posts = [post._id, ...user.posts];
-				user.save().then(user =>
-					post.save().then(post => res.status(201).json(post))
-				);
+				if (user) {
+					user.posts = [post._id, ...user.posts];
+					user.save().then(user =>
+						post.save().then(post => res.status(201).json(post))
+					);
+				} else res.status(404).json({ error: 'User not found' });
 			});
 		} else res.status(401).json({ error: 'Token invalid or expired' });
 	} else res.status(401).json({ error: 'Token missing' });

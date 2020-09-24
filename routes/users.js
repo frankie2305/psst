@@ -66,8 +66,7 @@ userRoutes.post('/signup', (req, res) => {
 				const user = new User({
 					username,
 					password: hash,
-					avatar: `http://robohash.org/${username}`,
-					follows: [],
+					avatar: `https://robohash.org/${username}`,
 				});
 				const userForToken = {
 					id: user._id,
