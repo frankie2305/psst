@@ -44,9 +44,9 @@ const CustomNavBar = () => {
 		<NavBar expand='lg' bg='dark' variant='dark' sticky='top'>
 			<NavBar.Brand href='/'>¡Psst!</NavBar.Brand>
 			<Nav.Link href='/'>Home</Nav.Link>
+			<Nav.Link href='/users'>Users</Nav.Link>
 			{isAuthenticated && (
 				<>
-					<Nav.Link href='/users'>Users</Nav.Link>
 					<Nav.Link href={`/users/${user.username}`}>
 						Profile
 					</Nav.Link>

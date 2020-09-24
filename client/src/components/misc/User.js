@@ -8,7 +8,8 @@ const User = ({ user }) => {
 
 	return (
 		<Link to={`/users/${user.username}`}>
-			<Card border={user.id === currentUser.id && 'primary'}>
+			<Card
+				border={currentUser && user.id === currentUser.id && 'primary'}>
 				<Card.Img variant='top' src={user.avatar}></Card.Img>
 				<Card.Body>
 					<Card.Title className='text-center text-primary'>

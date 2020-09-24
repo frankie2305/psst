@@ -50,7 +50,7 @@ const Home = () => {
 			<br />
 			<h1 className='text-center text-primary'>Home</h1>
 			<br />
-			{isAuthenticated ? (
+			{isAuthenticated && (
 				<>
 					<Form onSubmit={handleSubmit}>
 						<Form.Group>
@@ -71,7 +71,7 @@ const Home = () => {
 					</Form>
 					<br />
 				</>
-			) : null}
+			)}
 			{posts.map(post => (
 				<Post key={post.id} post={post} fetchPosts={fetchPosts} />
 			))}

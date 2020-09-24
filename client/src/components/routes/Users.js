@@ -1,13 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
 import Container from 'react-bootstrap/Container';
 import CardColumns from 'react-bootstrap/CardColumns';
-import { AuthContext } from '../../contexts/AuthContext';
 import User from '../misc/User';
 
 const Users = () => {
-	const { isAuthenticated } = useContext(AuthContext);
 	const [dataFetched, setDataFetched] = useState(false);
 	const [users, setUsers] = useState([]);
 
@@ -20,21 +17,19 @@ const Users = () => {
 	});
 
 	if (dataFetched)
-		if (isAuthenticated)
-			return (
-				<Container>
-					<br />
-					<h1 className='text-center text-primary'>Users</h1>
-					<br />
-					<CardColumns>
-						{users.map(user => (
-							<User key={user.id} user={user} />
-						))}
-					</CardColumns>
-					<br />
-				</Container>
-			);
-		else return <Redirect to='/' />;
+		return (
+			<Container>
+				<br />
+				<h1 className='text-center text-primary'>Users</h1>
+				<br />
+				<CardColumns>
+					{users.map(user => (
+						<User key={user.id} user={user} />
+					))}
+				</CardColumns>
+				<br />
+			</Container>
+		);
 	else
 		return (
 			<div className='d-flex justify-content-center'>
