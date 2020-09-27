@@ -59,7 +59,7 @@ const Post = ({ post, fetchPosts }) => {
 				</Card.Header>
 				<Card.Body>
 					<Card.Subtitle className='text-muted'>
-						{post.timestamp}
+						{new Date(post.timestamp).toLocaleString()}
 					</Card.Subtitle>
 					<Card.Text
 						dangerouslySetInnerHTML={{

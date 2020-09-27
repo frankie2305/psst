@@ -32,7 +32,7 @@ const Home = () => {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				timestamp: new Date().toLocaleString(),
+				timestamp: new Date().getTime(),
 				content,
 			}),
 		})

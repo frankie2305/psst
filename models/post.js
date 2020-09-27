@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const postSchema = Schema({
 	user: { type: Schema.Types.ObjectId, ref: 'User' },
-	timestamp: String,
+	timestamp: Number,
 	content: String,
 	likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
