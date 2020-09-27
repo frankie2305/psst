@@ -44,6 +44,7 @@ postRoutes.get('/mentions/:mention', (req, res) => {
 		if (user) {
 			Post.find({})
 				.populate('user')
+				.sort('-timestamp')
 				.exec((err, posts) => {
 					if (err) console.error(err.message);
 					else
@@ -64,6 +65,7 @@ postRoutes.get('/hashtags/:hashtag', (req, res) => {
 	const { hashtag } = req.params;
 	Post.find({})
 		.populate('user')
+		.sort('-timestamp')
 		.exec((err, posts) => {
 			if (err) console.error(err.message);
 			else

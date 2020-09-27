@@ -71,7 +71,10 @@ const EditModal = () => {
 				<Button
 					variant='primary'
 					onClick={handleSubmit}
-					disabled={editedContent === initialContent}>
+					disabled={
+						editedContent === initialContent ||
+						editedContent.length === 0
+					}>
 					Submit
 				</Button>
 			</Modal.Footer>
