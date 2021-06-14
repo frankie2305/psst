@@ -20,18 +20,5 @@
 		"server": "nodemon server",
 		"client": "npm start --prefix client",
 		"dev": "concurrently \"npm run server\" \"npm run client\""
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/MQCOMP3120-2020/individual-web-development-task-frankieMQ.git"
-	},
-	"author": "Quoc Trung Nguyen (Frankie)",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/MQCOMP3120-2020/individual-web-development-task-frankieMQ/issues"
-	},
-	"homepage": "https://github.com/MQCOMP3120-2020/individual-web-development-task-frankieMQ#readme",
-	"engines": {
-		"node": "12.18.4"
 	}
 }
